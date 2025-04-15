@@ -2,10 +2,10 @@ from termcolor import colored
 from threading import Thread, Event
 import uuid
 
-SPEED_SLOW = 10.0
-SPEED_NORMAL = 5.0
-SPEED_FAST = 1.0
-SPEED_REALTIME = 0.1
+SPEED_SLOW = 5.0
+SPEED_NORMAL = 1.0
+SPEED_FAST = 0.5
+SPEED_REALTIME = 0.01
 
 _fix_thread_stop_flag = None
 _fix_thread = None
@@ -51,11 +51,11 @@ def register_orderbook_handler(handler, speed = SPEED_NORMAL):
     _fix_thread.start()
     return _fix_thread_stop_flag
 
-def buy(symbol, price, quantity):
+def buy(wallet_uuid, symbol, price, quantity):
     print(colored("buy {} at {}$ on {} placed".format(quantity, price/10000, symbol), "green"))
     return uuid.uuid1()
 
-def sell(symbol, price, quantity):
+def sell(wallet_uuid, symbol, price, quantity):
     print(colored("sell {} at {}$ on {} placed".format(quantity, price/10000, symbol), "red"))
     return uuid.uuid1()
 

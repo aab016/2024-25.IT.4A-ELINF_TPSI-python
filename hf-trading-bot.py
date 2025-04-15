@@ -32,14 +32,16 @@ def my_orderbook_handler(order_book):
     chance = randint(0, 1)
     if chance == 1:
         qty = randint(1, first_ask_quantity)
-        order_uuid = buy(ask_symbol, first_ask_price, qty)
+        order_uuid = buy(WALLET_UUID, ask_symbol, first_ask_price, qty)
+        """
         print(
             "hf-trading-bot my_orderbook_handler() on {}, buy order_id {}".format(
                 now, order_uuid
             ),
             order_book,
         )
-        if order_status(order_uuid) == "EXECUTED":
+        """
+        if order_status(order_uuid)["status"] == "EXECUTED":
             MY_ORDERS.append(
                 {
                     "uuid": order_uuid,
@@ -60,12 +62,17 @@ def my_orderbook_handler(order_book):
         first_bid_quantity = first_bid["QUANTITY"]
 
         my_order_price = o["price"]
+        # print("#### my_order_price: {}".format(my_order_price))
+        # print("#### first_bid_price: {}".format(first_bid_price))
         if my_order_price < first_bid_price:
+            # print("#### my_order_price < first_bid_price")
             my_order_quantity = o["quantity"]
+            # print("#### my_order_quantity: {}".format(my_order_quantity))
+            # print("#### first_bid_quantity: {}".format(first_bid_quantity))
             if my_order_quantity < first_bid_quantity:
-                sell(my_order_symbol, my_order_price, my_order_quantity)
+                sell(WALLET_UUID, my_order_symbol, my_order_price, my_order_quantity)
             else:
-                sell(my_order_symbol, my_order_price, first_bid_quantity)
+                sell(WALLET_UUID, my_order_symbol, my_order_price, first_bid_quantity)
                 MY_ORDERS[my_order_index]["quantity"] = (
                     my_order_quantity - first_bid_quantity
                 )
@@ -73,7 +80,7 @@ def my_orderbook_handler(order_book):
     
     # check balance
     wallet_balance = wallet_status(WALLET_UUID)["balance"]
-    print("hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(wallet_balance))
+    # print("hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(wallet_balance))
 
 def main():
     global WALLET_UUID
@@ -88,7 +95,11 @@ def main():
     wallet_balance = wallet_status(WALLET_UUID)["balance"]
     print("hf-trading-bot main() wallet_balance is {}".format(wallet_balance))
 
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_SLOW)
     lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_NORMAL)
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_FAST)
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME)
+
     # in alternativa a CTRL+C per arrestare il thread dell'order_book
     # lagrangex_stopper.set()
 
