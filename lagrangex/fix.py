@@ -11,6 +11,9 @@ SPEED_REALTIME = 0.01
 
 _fix_thread_stop_flag = None
 _fix_thread = None
+_wallet = None
+_orders = []
+_orderbook_update_data = None
 
 class MyFixThread(Thread):
     
@@ -27,6 +30,7 @@ class MyFixThread(Thread):
         self._spamreader = csv.DictReader(csvfile, delimiter=',', quotechar='|')
 
     def run(self):
+        global _orderbook_update_data
         while not self.stopped.wait(self._orderbook_handler_speed):
             orderbook_update_id = 123
             orderbook_update_data_next = self._spamreader.__next__()
@@ -51,6 +55,7 @@ class MyFixThread(Thread):
             if self._orderbook_handler is None:
                 print(colored("register_orderbook_handler was not used, orderbook_update n. {} lost".format(orderbook_update_id), "magenta"))
             else:
+                _orderbook_update_data = orderbook_update_data
                 self._orderbook_handler(orderbook_update_data)
 
 def register_orderbook_handler(handler, speed = SPEED_NORMAL):
@@ -61,27 +66,56 @@ def register_orderbook_handler(handler, speed = SPEED_NORMAL):
     return _fix_thread_stop_flag
 
 def buy(wallet_uuid, symbol, price, quantity):
-    print(colored("buy {} at {}$ on {} placed".format(quantity, price/10000, symbol), "green"))
-    return uuid.uuid1()
+    global _orders, _orderbook_update_data
+    order_total = quantity * price
+    order = {
+        "order_id": uuid.uuid1(),
+        "order_total": order_total,
+        "order_status": "NOT_EXECUTED"
+    }
+    if order_total > _wallet["balance"]:
+        print(colored("CURRENT BALANCE LOWER THAN ORDER TOTAL {}".format(order_total/10000), "red", attrs=["reverse", "bold"]))
+        order["order_status"] = "NOT_ENOUGH_BALANCE"
+    else:
+        # TODO support partial fill
+        # TODO support multi ASK
+        p = _orderbook_update_data["SYMBOLS"][symbol]["ASK"][0]["PRICE"]
+        q = _orderbook_update_data["SYMBOLS"][symbol]["ASK"][0]["QUANTITY"]
+        if price >= p and quantity <= q:
+            print(colored("buy {} at {}$ on {} placed".format(quantity, price/10000, symbol), "green"))
+            order["order_status"] = "EXECUTED"
+            _wallet["balance"] -= order_total
+        else:
+            print(colored("Non vi è sufficiente liquidità per questo ordine", "red", attrs=["reverse", "bold"]))
+            order["order_status"] = "NOT_ENOUGH_ASK_LIQUIDITY"
+    
+    _orders.append(order)
+    return order["order_id"]
 
 def sell(wallet_uuid, symbol, price, quantity):
     print(colored("sell {} at {}$ on {} placed".format(quantity, price/10000, symbol), "red"))
     return uuid.uuid1()
 
 def order_status(order_id):
-    order_status = "EXECUTED"
-    print(colored("order {} status is {}".format(order_id, order_status), "blue"))
-    return {
-        "status": order_status
-    }
+    global _orders
+    for o in _orders:
+        if o["order_id"] == order_id:
+            return o
 
 def wallet_status(wallet_uuid):
-    balance = 10000
+    global _wallet
     return {
-        "balance": balance
+        "balance": _wallet["balance"]/10000
     }
 
 def open_wallet(balance):
+    global _wallet
     wallet_uuid = uuid.uuid1()
+
+    _wallet = {
+        "wallet_uuid": wallet_uuid,
+        "balance": balance * 10000
+    }
+    
     print(colored("opened a {}$ wallet with uuid {}".format(balance, wallet_uuid), "cyan"))
     return wallet_uuid

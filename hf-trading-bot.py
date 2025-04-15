@@ -41,7 +41,7 @@ def my_orderbook_handler(order_book):
             order_book,
         )
         """
-        if order_status(order_uuid)["status"] == "EXECUTED":
+        if order_status(order_uuid)["order_status"] == "EXECUTED":
             MY_ORDERS.append(
                 {
                     "uuid": order_uuid,
@@ -50,6 +50,8 @@ def my_orderbook_handler(order_book):
                     "symbol": ask_symbol,
                 }
             )
+            wallet_balance = wallet_status(WALLET_UUID)["balance"]
+            print("hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(wallet_balance))
 
     # sell everything is in profit
     my_order_index = 0
@@ -79,7 +81,7 @@ def my_orderbook_handler(order_book):
         my_order_index += 1
     
     # check balance
-    wallet_balance = wallet_status(WALLET_UUID)["balance"]
+    # wallet_balance = wallet_status(WALLET_UUID)["balance"]
     # print("hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(wallet_balance))
 
 def main():
