@@ -36,10 +36,8 @@ class MyFixThread(Thread):
         self._orderbook_handler_speed = orderbook_handler_speed
         self._orderbook_handler = orderbook_handler
         self._orderbook_depth_level = orderbook_depth_level
-        csv_file_name = (
-            "AMZN_2012-06-21_34200000_57600000_orderbook_{}.csv".format(
-                self._orderbook_depth_level
-            )
+        csv_file_name = "AMZN_2012-06-21_34200000_57600000_orderbook_{}.csv".format(
+            self._orderbook_depth_level
         )
         current_working_directory = os.path.dirname(os.path.realpath(__file__))
         csv_path = "{}/../data/{}".format(current_working_directory, csv_file_name)

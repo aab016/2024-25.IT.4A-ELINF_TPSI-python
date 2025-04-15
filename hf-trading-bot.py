@@ -51,7 +51,11 @@ def my_orderbook_handler(order_book):
                 }
             )
             wallet_balance = wallet_status(WALLET_UUID)["balance"]
-            print("hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(wallet_balance))
+            print(
+                "hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(
+                    wallet_balance
+                )
+            )
 
     # sell everything is in profit
     my_order_index = 0
@@ -102,14 +106,14 @@ def main():
     wallet_balance = wallet_status(WALLET_UUID)["balance"]
     print("hf-trading-bot main() wallet_balance is {}".format(wallet_balance))
 
-    lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_SLOW)
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_NORMAL)
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_FAST)
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME)
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-short") # 1000 orderbook updates
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-medium") # 5000 orderbook updates
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-long") # 25000 orderbook updates
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1") # 57516 orderbook updates
+    register_orderbook_handler(my_orderbook_handler, SPEED_SLOW)
+    # register_orderbook_handler(my_orderbook_handler, SPEED_NORMAL)
+    # register_orderbook_handler(my_orderbook_handler, SPEED_FAST)
+    # register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME)
+    # register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-short") # 1000 orderbook updates
+    # register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-medium") # 5000 orderbook updates
+    # register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-long") # 25000 orderbook updates
+    # register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1") # 57516 orderbook updates
 
 
 if __name__ == "__main__":
