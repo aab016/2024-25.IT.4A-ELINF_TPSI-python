@@ -79,10 +79,15 @@ def my_orderbook_handler(order_book):
                     my_order_quantity - first_bid_quantity
                 )
         my_order_index += 1
-    
+
     # check balance
-    # wallet_balance = wallet_status(WALLET_UUID)["balance"]
-    # print("hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(wallet_balance))
+    wallet_balance = wallet_status(WALLET_UUID)["balance"]
+    print(
+        "hf-trading-bot my_orderbook_handler() wallet_balance is {}".format(
+            wallet_balance
+        )
+    )
+
 
 def main():
     global WALLET_UUID
@@ -97,13 +102,10 @@ def main():
     wallet_balance = wallet_status(WALLET_UUID)["balance"]
     print("hf-trading-bot main() wallet_balance is {}".format(wallet_balance))
 
-    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_SLOW)
-    lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_NORMAL)
+    lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_SLOW)
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_NORMAL)
     # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_FAST)
     # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME)
-
-    # in alternativa a CTRL+C per arrestare il thread dell'order_book
-    # lagrangex_stopper.set()
 
 
 if __name__ == "__main__":
