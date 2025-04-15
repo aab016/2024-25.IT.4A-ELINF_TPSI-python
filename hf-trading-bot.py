@@ -106,6 +106,10 @@ def main():
     # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_NORMAL)
     # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_FAST)
     # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME)
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-short") # 1000 orderbook updates
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-medium") # 5000 orderbook updates
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1-long") # 25000 orderbook updates
+    # lagrangex_stopper = register_orderbook_handler(my_orderbook_handler, SPEED_REALTIME, "1") # 57516 orderbook updates
 
 
 if __name__ == "__main__":

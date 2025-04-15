@@ -29,7 +29,7 @@ class MyFixThread(Thread):
         event,
         orderbook_handler_speed,
         orderbook_handler,
-        orderbook_depth_level="1",
+        orderbook_depth_level,
     ):
         Thread.__init__(self)
         self.stopped = event
@@ -37,7 +37,7 @@ class MyFixThread(Thread):
         self._orderbook_handler = orderbook_handler
         self._orderbook_depth_level = orderbook_depth_level
         csv_file_name = (
-            "AMZN_2012-06-21_34200000_57600000_orderbook_{}-short.csv".format(
+            "AMZN_2012-06-21_34200000_57600000_orderbook_{}.csv".format(
                 self._orderbook_depth_level
             )
         )
@@ -120,10 +120,10 @@ class MyFixThread(Thread):
                 _fix_thread_stop_flag.set()
 
 
-def register_orderbook_handler(handler, speed=SPEED_NORMAL):
+def register_orderbook_handler(handler, speed=SPEED_NORMAL, level="1-short"):
     global _fix_thread_stop_flag, _fix_thread
     _fix_thread_stop_flag = Event()
-    _fix_thread = MyFixThread(_fix_thread_stop_flag, speed, handler)
+    _fix_thread = MyFixThread(_fix_thread_stop_flag, speed, handler, level)
     _fix_thread.start()
     return _fix_thread_stop_flag
 
