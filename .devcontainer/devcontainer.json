@@ -1,0 +1,27 @@
+{
+	"postCreateCommand": ".devcontainer/post-create-command.sh",
+    "features": {
+		"ghcr.io/devcontainers/features/python:1": {
+            "version": "3.12.1",
+            "installTools": true,
+			"optimize": true,
+            "toolsToInstall": "flake8,autopep8,black,yapf,mypy,pydocstyle,pycodestyle,bandit,pipenv,virtualenv,pytest,pylint"
+        }
+	},
+	"customizations": {
+		"codespaces": {
+			"openFiles": [
+				"MAZE.txt"
+			]
+		},
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.autopep8",
+				"mechatroner.rainbow-csv",
+				"eamodio.gitlens"
+			]
+		}
+	}
+}
